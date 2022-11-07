@@ -1,10 +1,22 @@
-﻿namespace FriendOrganizer.Model;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FriendOrganizer.Model;
 
 public class Friend
 {
-    public int Id { get; set; }
-    public string FirstName { get; set; } = default!;
-    public string LastName { get; set; } = default!;
-    public string Email { get; set; } = default!;
+    // Here [Required] data annotation can be replaced with C# nullable reference type implicit validations
+    // But since we want to use the annotations for WPF, we will use it here.
 
+    [Key]
+    public int Id { get; set; }
+
+    [Required]
+    [StringLength(50)]
+    public string FirstName { get; set; } = default!;
+
+    [StringLength(50)]
+    public string? LastName { get; set; } = default!;
+
+    [StringLength(50)]
+    public string? Email { get; set; }
 }

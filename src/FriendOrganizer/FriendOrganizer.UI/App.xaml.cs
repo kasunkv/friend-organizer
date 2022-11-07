@@ -1,4 +1,5 @@
-﻿using FriendOrganizer.UI.Data;
+﻿using FriendOrganizer.DataAccess.Extensions;
+using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +41,7 @@ namespace FriendOrganizer.UI
             services.AddTransient<MainViewModel>();
             services.AddTransient<MainWindow>();
             services.AddTransient<IFriendDataService, FriendDataService>();
+            services.ConfigureEntityFrameworkCore(Configuration);
         }
     }
 }
