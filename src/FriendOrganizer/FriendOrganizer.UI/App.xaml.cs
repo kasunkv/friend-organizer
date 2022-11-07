@@ -3,6 +3,7 @@ using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Prism.Events;
 using System;
 using System.IO;
 using System.Windows;
@@ -49,6 +50,9 @@ namespace FriendOrganizer.UI
             // 02. Then forward/delegate the requests to interfaces using the factory methods by requireing the registered dependency.
             services.AddTransient<LookupDataService>();
             services.AddTransient<IFriendLookupDataService>(sp => sp.GetRequiredService<LookupDataService>());
+
+            // Register Prism event aggregator
+            services.AddSingleton<IEventAggregator, EventAggregator>();
 
 
             services.ConfigureEntityFrameworkCore(Configuration);
