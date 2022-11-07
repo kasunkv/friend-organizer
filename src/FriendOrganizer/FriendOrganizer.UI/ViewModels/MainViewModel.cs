@@ -2,6 +2,7 @@
 using FriendOrganizer.UI.Data;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace FriendOrganizer.UI.ViewModels;
 
@@ -31,9 +32,9 @@ public class MainViewModel : ViewModelBase
 		_friendDataService = friendDataService ?? throw new ArgumentNullException(nameof(friendDataService));
 	}
 
-	public void Load()
+	public async Task LoadAsync()
 	{
-		var friends = _friendDataService.GetAll();
+		var friends = await _friendDataService.GetAllAsync();
 
 		Friends.Clear();
 		foreach (var friend in friends)
