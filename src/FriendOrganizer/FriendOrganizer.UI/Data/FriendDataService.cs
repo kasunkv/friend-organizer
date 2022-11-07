@@ -2,8 +2,6 @@
 using FriendOrganizer.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FriendOrganizer.UI.Data;
@@ -17,9 +15,9 @@ public class FriendDataService : IFriendDataService
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<List<Friend>> GetAllAsync()
+    public async Task<Friend> GetByIdAsync(int friendId)
     {
-        var friends = await _context.Friends.AsNoTracking().ToListAsync();
-        return friends;
+        var friend = await _context.Friends.AsNoTracking().SingleAsync(f => f.Id == friendId);
+        return friend;
     }
 }
