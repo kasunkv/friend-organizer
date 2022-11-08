@@ -1,6 +1,8 @@
 ﻿using FriendOrganizer.DataAccess.Extensions;
-using FriendOrganizer.UI.Data;
+using FriendOrganizer.UI.Data.Lookups;
+using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.ViewModels;
+using FriendOrganizer.UI.Views.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
@@ -40,17 +42,18 @@ namespace FriendOrganizer.UI
 
         private void ConfigureServices(ServiceCollection services)
         {
-            services.AddScoped<MainViewModel>();
-            services.AddScoped<INavigationViewModel, NavigationViewModel>();
-            services.AddScoped<IFriendDetailViewModel, FriendDetailViewModel>();
             services.AddScoped<MainWindow>();
-            services.AddScoped<IFriendDataService, FriendDataService>();
+            services.AddScoped<MainViewModel>();
+            services.AddTransient<INavigationViewModel, NavigationViewModel>();
+            services.AddTransient<IFriendDetailViewModel, FriendDetailViewModel>();
+            services.AddTransient<IFriendRepository, FriendRepository>();
 
             // Important - Workaround for the limiration of .Net core DI registering the same dependency for multiple interfaces
             // 01. Register the concrete dependency explicitly first
             // 02. Then forward/delegate the requests to interfaces using the factory methods by requireing the registered dependency.
-            services.AddScoped<LookupDataService>();
-            services.AddScoped<IFriendLookupDataService>(sp => sp.GetRequiredService<LookupDataService>());
+            services.AddTransient<LookupDataService>();
+            services.AddTransient<IMessageDialogService, MessageDialogService>();
+            services.AddTransient<IFriendLookupDataService>(sp => sp.GetRequiredService<LookupDataService>());
 
             // Register Prism event aggregator
             services.AddSingleton<IEventAggregator, EventAggregator>();

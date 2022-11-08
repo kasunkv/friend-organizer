@@ -4,29 +4,31 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
-namespace FriendOrganizer.UI.Data;
+namespace FriendOrganizer.UI.Data.Repositories;
 
-public class FriendDataService : IFriendDataService
+public class FriendRepository : IFriendRepository
 {
     private readonly FriendOrganizerDbContext _context;
 
-    public FriendDataService(FriendOrganizerDbContext context)
+    public FriendRepository(FriendOrganizerDbContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public async Task<Friend> GetByIdAsync(int friendId)
     {
-        var friend = await _context.Friends.AsNoTracking().SingleAsync(f => f.Id == friendId);
+        var friend = await _context.Friends.SingleAsync(f => f.Id == friendId);
         return friend;
     }
 
-    public async Task SaveAsync(Friend friend)
+    public bool HasChanges()
     {
-        _context.Friends.Attach(friend);
-        _context.Entry(friend).State = EntityState.Modified;
+        return _context.ChangeTracker.HasChanges();
+    }
 
+    public async Task SaveAsync()
+    {
         await _context.SaveChangesAsync();
-        _context.ChangeTracker.Clear();
+        //_context.ChangeTracker.Clear();
     }
 }
