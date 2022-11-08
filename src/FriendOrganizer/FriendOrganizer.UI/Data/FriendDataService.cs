@@ -27,5 +27,6 @@ public class FriendDataService : IFriendDataService
         _context.Entry(friend).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
+        _context.ChangeTracker.Clear();
     }
 }

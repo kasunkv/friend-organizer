@@ -12,11 +12,12 @@ public class Friend
 
     [Required]
     [StringLength(50)]
-    public string FirstName { get; set; } = default!;
+    public string? FirstName { get; set; }
 
     [StringLength(50)]
-    public string? LastName { get; set; } = default!;
+    public string? LastName { get; set; }
 
     [StringLength(50)]
+    [EmailAddress]
     public string? Email { get; set; }
 }

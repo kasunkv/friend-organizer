@@ -7,6 +7,7 @@ using Prism.Events;
 using System;
 using System.IO;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace FriendOrganizer.UI
 {
@@ -39,23 +40,30 @@ namespace FriendOrganizer.UI
 
         private void ConfigureServices(ServiceCollection services)
         {
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<INavigationViewModel, NavigationViewModel>();
-            services.AddTransient<IFriendDetailViewModel, FriendDetailViewModel>();
-            services.AddTransient<MainWindow>();
-            services.AddTransient<IFriendDataService, FriendDataService>();
+            services.AddScoped<MainViewModel>();
+            services.AddScoped<INavigationViewModel, NavigationViewModel>();
+            services.AddScoped<IFriendDetailViewModel, FriendDetailViewModel>();
+            services.AddScoped<MainWindow>();
+            services.AddScoped<IFriendDataService, FriendDataService>();
 
             // Important - Workaround for the limiration of .Net core DI registering the same dependency for multiple interfaces
             // 01. Register the concrete dependency explicitly first
             // 02. Then forward/delegate the requests to interfaces using the factory methods by requireing the registered dependency.
-            services.AddTransient<LookupDataService>();
-            services.AddTransient<IFriendLookupDataService>(sp => sp.GetRequiredService<LookupDataService>());
+            services.AddScoped<LookupDataService>();
+            services.AddScoped<IFriendLookupDataService>(sp => sp.GetRequiredService<LookupDataService>());
 
             // Register Prism event aggregator
             services.AddSingleton<IEventAggregator, EventAggregator>();
 
 
             services.ConfigureEntityFrameworkCore(Configuration);
+        }
+
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show($"Unexpected error occured. Please inform the admin.{Environment.NewLine}Error: {e.Exception.Message}", "Unexpected Error");
+
+            e.Handled = true;
         }
     }
 }
