@@ -20,4 +20,12 @@ public class FriendDataService : IFriendDataService
         var friend = await _context.Friends.AsNoTracking().SingleAsync(f => f.Id == friendId);
         return friend;
     }
+
+    public async Task SaveAsync(Friend friend)
+    {
+        _context.Friends.Attach(friend);
+        _context.Entry(friend).State = EntityState.Modified;
+
+        await _context.SaveChangesAsync();
+    }
 }
